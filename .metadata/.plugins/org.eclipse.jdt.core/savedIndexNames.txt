@@ -1,0 +1,1 @@
+INDEX VERSION 1.131+C:\Users\membr\Desktop\proyect\Angular_Spring\.metadata\.plugins\org.eclipse.jdt.core
