@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.OSC.Academy.models.services.ClientService&apos; to &apos;ClientServiceImpl&apos;&#x0D;&#x0A;- Original project: &apos;Academy&apos;&#x0D;&#x0A;- Original element: &apos;com.OSC.Academy.models.services.ClientService&apos;&#x0D;&#x0A;- Renamed element: &apos;com.OSC.Academy.models.services.ClientServiceImpl&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;ClientService&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.OSC.Academy.models.services{ClientService.java[ClientService" matchStrategy="1" name="ClientServiceImpl" qualified="false" references="true" similarDeclarations="false" stamp="1586800294806" textual="false" version="1.0"/>
+</session>

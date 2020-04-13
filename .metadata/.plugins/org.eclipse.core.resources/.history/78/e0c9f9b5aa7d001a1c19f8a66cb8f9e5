@@ -1,0 +1,5 @@
+package com.OSC.Academy.models.dao;
+
+public interface IClientDao {
+
+}
