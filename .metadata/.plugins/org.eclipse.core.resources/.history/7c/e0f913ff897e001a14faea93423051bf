@@ -1,0 +1,5 @@
+package com.OSC.Academy.controllers;
+
+public class ClientController {
+
+}
