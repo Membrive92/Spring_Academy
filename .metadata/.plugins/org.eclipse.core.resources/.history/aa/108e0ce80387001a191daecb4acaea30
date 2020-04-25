@@ -1,0 +1,5 @@
+INSERT INTO clients (name, last_name, create_at) Values ('Paco', 'Toribio', 'paquito@test.com','2018-01-01');
+INSERT INTO clients (name, last_name, create_at) Values ('Veronica', 'Toribio', 'vero@test.com','2018-01-01');
+INSERT INTO clients (name, last_name, create_at) Values ('Lorena', 'Toribio', 'lore@test.com','2018-01-01');
+INSERT INTO clients (name, last_name, create_at) Values ('LaRosi', 'Soriano', 'rosi@test.com','2018-01-01');
+INSERT INTO clients (name, last_name, create_at) Values ('dimitri', 'Toribio', 'dimitri@test.com','2018-01-01');

@@ -1,0 +1,10 @@
+spring.datasource.url=jdbc:mysql://localhost/db_academy?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.database-platform=org.hibernate.dialect.MySQL57Dialect
+spring.jpa.hibernate.ddl-auto=create-drop
+logging.level.org.hibernate.SQL=debug
+
+
+
