@@ -24,9 +24,10 @@ public class Client implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	
+	@Column(nullable=false)
 	private String name;
 	private String lastName;
+	@Column(nullable=false, unique=true)
 	private String email;
 	
 	//if column name is equal to attribute, its can be to skip
