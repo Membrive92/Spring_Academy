@@ -1,13 +1,19 @@
 package com.OSC.Academy.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,9 +65,23 @@ public class ClientController {
 	
 	@PostMapping("/clients")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> create(@RequestBody Client client) {
+	public ResponseEntity<?> create(@Valid @RequestBody Client client,BindingResult result ) {
 		Client newClient = null;
 		Map<String, Object> response = new HashMap<>();
+		if(result.hasErrors()) {
+			
+			/* A way of collect error from validation
+			 * List<String> errors = new ArrayList<>();
+			 * 
+			 * for(FieldError err: result.getFieldErrors()) { errors.add("Field '"+
+			 * err.getField() + "' "+ err.getDefaultMessage()); }
+			 */
+			List<String> errors = result.getFieldErrors().stream().map(err ->  "Field '" + err.getField() + "' " +err.getDefaultMessage()
+			).collect(Collectors.toList());
+			
+			response.put("errors", errors);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
 		
 		try {
 			newClient = clientService.save(client);
@@ -78,10 +98,24 @@ public class ClientController {
 	
 	@PutMapping("/clients/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> update(@RequestBody Client client, @PathVariable Long id) {
+	public ResponseEntity<?> update(@Valid @RequestBody Client client,BindingResult result, @PathVariable Long id) {
 		 Client currentClient = clientService.findById(id);
 		 Client upadtedClient = null;
 		 Map<String, Object> response = new HashMap<>();
+		 if(result.hasErrors()) {
+				
+				/* A way of collect error from validation
+				 * List<String> errors = new ArrayList<>();
+				 * 
+				 * for(FieldError err: result.getFieldErrors()) { errors.add("Field '"+
+				 * err.getField() + "' "+ err.getDefaultMessage()); }
+				 */
+				List<String> errors = result.getFieldErrors().stream().map(err ->  "Field '" + err.getField() + "' " +err.getDefaultMessage()
+				).collect(Collectors.toList());
+				
+				response.put("errors", errors);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
 		 
 		 if(currentClient == null) {
 				response.put("message", "Error: ID client: " .concat(id.toString().concat(" can't be edited in database")));
