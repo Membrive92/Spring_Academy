@@ -35,7 +35,7 @@ public class Client implements Serializable {
 	@NotEmpty(message = "must not be empty")
 	private String lastName;
 	
-	@Column(nullable=false, unique=false)
+	@Column(nullable=false, unique=true)
 	@NotEmpty(message = "must not be empty")
 	@Email(message = "have to a right format")
 	private String email;
