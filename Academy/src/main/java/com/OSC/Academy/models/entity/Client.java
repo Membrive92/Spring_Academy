@@ -27,17 +27,17 @@ public class Client implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotEmpty
-	@Size(min=4, max=12)
+	@NotEmpty(message = "must not be empty")
+	@Size(min=4, max=12, message = "size must be between 4 and 12")
 	@Column(nullable=false)
 	private String name;
 	
-	@NotEmpty
+	@NotEmpty(message = "must not be empty")
 	private String lastName;
 	
-	@Column(nullable=false, unique=true)
-	@NotEmpty
-	@Email
+	@Column(nullable=false, unique=false)
+	@NotEmpty(message = "must not be empty")
+	@Email(message = "have to a right format")
 	private String email;
 	
 	//if column name is equal to attribute, its can be to skip
