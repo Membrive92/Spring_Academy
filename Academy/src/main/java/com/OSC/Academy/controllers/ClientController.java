@@ -57,14 +57,14 @@ public class ClientController {
 		try {
 			client = clientService.findById(id);
 		} catch (DataAccessException e) {
-			response.put("message", "There was an error in database");
+			response.put("message", "Hay un error en la base de datos");
 			response.put("error",e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		
 		if(client == null) {
-			response.put("message", "ID client: " .concat(id.toString().concat(" not found in database")));
+			response.put("message", "ID client: " .concat(id.toString().concat(" No encontrado en la base de datos")));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Client>(client, HttpStatus.OK); 
@@ -94,11 +94,11 @@ public class ClientController {
 		try {
 			newClient = clientService.save(client);
 		} catch (DataAccessException e) {
-			response.put("message", "There was an error when you try to create the client");
+			response.put("message", "Ha ocurrido un error durante la creacion del cliente");
 			response.put("error",e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("message", "Client has been created successfully!");
+		response.put("message", "El cliente se ha creado con exito");
 		response.put("client", newClient);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED); 
 		
@@ -126,7 +126,7 @@ public class ClientController {
 			}
 		 
 		 if(currentClient == null) {
-				response.put("message", "Error: ID client: " .concat(id.toString().concat(" can't be edited in database")));
+				response.put("message", "Error: ID client: " .concat(id.toString().concat(" No puede ser editado")));
 				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 			}
 		 
@@ -139,11 +139,11 @@ public class ClientController {
 			 
 			 upadtedClient = clientService.save(currentClient);
 		} catch (DataAccessException e) {
-			response.put("message", "There was an error when you try to update the client");
+			response.put("message", "Ha ocurrido un error al actualizar");
 			response.put("error",e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("message", "Client has been updated successfully!");
+		response.put("message", "El cliente ha sido actualizado con exito");
 		response.put("client", upadtedClient);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED); 
 		
@@ -157,11 +157,11 @@ public class ClientController {
 		 try {
 		clientService.delete(id);
 	} catch(DataAccessException e) {
-		response.put("message", "There was an error when you try to remove the client");
+		response.put("message", "No se ha podido eliminar el cliente");
 		response.put("error",e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-		 response.put("message", "Client has been removed successfully!");
+		 response.put("message", "El cliente ha sido eliminado con exito");
 		 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK); 
 }
 }

@@ -14,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -27,28 +28,29 @@ public class Client implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotEmpty(message = "must not be empty")
-	@Size(min=4, max=12, message = "size must be between 4 and 12")
+	@NotEmpty(message = "No puede estar vacio")
+	@Size(min=4, max=12, message = "El tamaño tiene qu estar entre 4 y 12 ")
 	@Column(nullable=false)
 	private String name;
 	
-	@NotEmpty(message = "must not be empty")
+	@NotEmpty(message = "No puede estar vacio")
 	private String lastName;
 	
 	@Column(nullable=false, unique=true)
-	@NotEmpty(message = "must not be empty")
-	@Email(message = "have to a right format")
+	@NotEmpty(message = "No puede estar vacio")
+	@Email(message = "Tiene que tener el formato correcto")
 	private String email;
 	
 	//if column name is equal to attribute, its can be to skip
+	@NotNull(message = "No puede estar vacio")
 	@Column(name="create_at")
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 	
-	@PrePersist
-	public void prePersist() {
-		createAt = new Date();
-	}
+	//@PrePersist
+	//public void prePersist() {
+		//createAt = new Date();
+	//}
 
 	public Long getId() {
 		return id;
