@@ -1,5 +1,6 @@
 package com.OSC.Academy.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -165,6 +166,16 @@ public class ClientController {
 
 		Map<String, Object> response = new HashMap<>();
 		try {
+			Client client = clientService.findById(id);
+				String oldNameImage = client.getImage();
+			
+			if(oldNameImage != null && oldNameImage.length() >0) {
+				Path oldImageRoute = Paths.get("uploads").resolve(oldNameImage).toAbsolutePath();
+				File oldImageFile = oldImageRoute.toFile();
+				if(oldImageFile.exists() && oldImageFile.canRead()) {
+					oldImageFile.delete();
+				}
+			}
 			clientService.delete(id);
 		} catch (DataAccessException e) {
 			response.put("message", "No se ha podido eliminar el cliente");
@@ -189,6 +200,16 @@ public class ClientController {
 				response.put("error", e.getMessage().concat(": ".concat(e.getCause().getMessage())));
 				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		
+			}
+			
+			String oldNameImage = client.getImage();
+			
+			if(oldNameImage != null && oldNameImage.length() >0) {
+				Path oldImageRoute = Paths.get("uploads").resolve(oldNameImage).toAbsolutePath();
+				File oldImageFile = oldImageRoute.toFile();
+				if(oldImageFile.exists() && oldImageFile.canRead()) {
+					oldImageFile.delete();
+				}
 			}
 			client.setImage(fileName);
 			clientService.save(client);
