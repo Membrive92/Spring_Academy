@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -50,6 +52,8 @@ public class ClientController {
 
 	@Autowired
 	private IClientService clientService;
+
+	private final Logger log = LoggerFactory.getLogger(ClientController.class);
 
 	@GetMapping("/clients")
 	public List<Client> index() {
@@ -197,6 +201,7 @@ public class ClientController {
 		if (!file.isEmpty()) {
 			String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename().replace(" ", "");
 			Path fileRoute = Paths.get("uploads").resolve(fileName).toAbsolutePath();
+			log.info(fileRoute.toString());
 			try {
 				Files.copy(file.getInputStream(), fileRoute);
 			} catch (IOException e) {
@@ -228,6 +233,7 @@ public class ClientController {
 	@GetMapping("/uploads/img/{nameImage:.+}")
 	public  ResponseEntity<Resource> viewImage(@PathVariable String nameImage){
 		Path fileRoute = Paths.get("uploads").resolve(nameImage).toAbsolutePath();
+		log.info(fileRoute.toString());
 		Resource resource = null;
 
 		try {
@@ -237,7 +243,13 @@ public class ClientController {
 		}
 
 		if(!resource.exists() && !resource.isReadable()){
-			throw new RuntimeException("Error no se pudo cargar la imagen: " + nameImage);
+			fileRoute = Paths.get("src/main/resources/static/images").resolve("NotUser.png").toAbsolutePath();
+			try {
+				resource = new UrlResource(fileRoute.toUri());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			log.error("Error no se pudo cargar la imagen: " + nameImage);
 		}
 		HttpHeaders header = new HttpHeaders();
 		header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"");
