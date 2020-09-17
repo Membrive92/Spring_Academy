@@ -14,13 +14,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +37,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/api")
+@EnableScheduling
 public class ClientController {
 
 	@Autowired
@@ -39,14 +48,35 @@ public class ClientController {
 
 	private final Logger log = LoggerFactory.getLogger(ClientController.class);
 
+
+
+
+
 	@GetMapping("/clients")
+
 	public List<Client> index() {
 		return clientService.findAll();
+
+
 	}
+	@Scheduled(cron = "00 52 13 1 * ?")
+	public void resetPaid() {
+      List<Client> clients = clientService.findAll();
+      for(Client clientPaid : clients) {
+    	  clientPaid.setPaid(false);
+    	  clientService.save(clientPaid);
+    	  System.out.println("Cliente " +clientPaid.getId() + " pago: ");
+    	  System.out.println(clientPaid.paid);
+      }
+
+}
+
+
+
 
 	@GetMapping("/clients/page/{page}")
 	public Page<Client> index(@PathVariable Integer page) {
-		Pageable pageable = PageRequest.of(page, 1);
+		Pageable pageable = PageRequest.of(page, 20);
 		return clientService.findAll(pageable);
 	}
 
@@ -110,7 +140,7 @@ public class ClientController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> update(@Valid @RequestBody Client client, BindingResult result, @PathVariable Long id) {
 		Client currentClient = clientService.findById(id);
-		Client upadtedClient = null;
+		Client updatedClient = null;
 		Map<String, Object> response = new HashMap<>();
 		if (result.hasErrors()) {
 
@@ -139,18 +169,20 @@ public class ClientController {
 			currentClient.setLastName(client.getLastName());
 			currentClient.setEmail(client.getEmail());
 			currentClient.setCreateAt(client.getCreateAt());
+			currentClient.setPaid(client.isPaid());
 
-			upadtedClient = clientService.save(currentClient);
+			updatedClient = clientService.save(currentClient);
 		} catch (DataAccessException e) {
 			response.put("message", "Ha ocurrido un error al actualizar");
 			response.put("error", e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		response.put("message", "El cliente ha sido actualizado con exito");
-		response.put("client", upadtedClient);
+		response.put("client", updatedClient);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 
 	}
+
 
 	@DeleteMapping("/clients/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -175,9 +207,11 @@ public class ClientController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 
+
 	@PostMapping("/clients/upload")
 	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, @RequestParam("id") Long id) {
 		Map<String, Object> response = new HashMap<>();
+
 		Client client = clientService.findById(id);
 
 		if (!file.isEmpty()) {
@@ -186,7 +220,7 @@ public class ClientController {
 			try {
 				fileName = uploadService.copy(file);
 			} catch (IOException e) {
-				response.put("mensaje", "Error al subir la imagen");
+				response.put("message", "Error al subir la imagen");
 				response.put("error", e.getMessage().concat(": ".concat(e.getCause().getMessage())));
 				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		
@@ -224,4 +258,5 @@ public class ClientController {
 
 		return new ResponseEntity<Resource>(resource,header, HttpStatus.OK);
 	}
+
 }
